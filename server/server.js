@@ -2,7 +2,6 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
@@ -14,14 +13,19 @@ connectDB();
 
 const app = express();
 
-app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
-  credentials: true
-}));
+const allowedOrigin = (process.env.CLIENT_URL || 'http://localhost:5173')
+  .replace(/\/$/, '');
+
+app.use(
+  cors({
+    origin: allowedOrigin,
+    credentials: true
+  })
+);
 
 app.use(express.json());
 
-app.get("/", (req,res) => {
+app.get("/", (req, res) => {
   res.json({
     message: "FreshFlow API is running 🚀",
   });
