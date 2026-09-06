@@ -5,7 +5,11 @@ import {
     Package,
     MapPin,
     CreditCard,
-    CalendarDays
+    CalendarDays,
+    CheckCircle,
+    Loader,
+    Truck,
+    Home
 } from 'lucide-react';
 
 import API from '../api/axios';
@@ -54,7 +58,7 @@ function OrderDetails() {
         return (
             <div className="page container">
                 <div className="page-loading">
-                    Loading order details...
+                    Loading order details…
                 </div>
             </div>
         );
@@ -63,11 +67,11 @@ function OrderDetails() {
     if (error || !order) {
         return (
             <div className="page container">
-                <div className="error-message">
+                <div className="error-message" role="alert">
                     {error || 'Order not found'}
                 </div>
 
-                <Link to="/orders" className="secondary-btn">
+                <Link to="/orders" className="secondary-btn" style={{ marginTop: 16, display: 'inline-flex' }}>
                     Back to Orders
                 </Link>
             </div>
@@ -78,22 +82,26 @@ function OrderDetails() {
         {
             key: 'confirmed',
             label: 'Order Confirmed',
-            description: 'Your order has been confirmed successfully.'
+            description: 'Your order has been confirmed successfully.',
+            icon: CheckCircle
         },
         {
             key: 'processing',
             label: 'Processing',
-            description: 'We are preparing your fresh groceries.'
+            description: 'We are preparing your fresh groceries.',
+            icon: Package
         },
         {
             key: 'out_for_delivery',
             label: 'Out for Delivery',
-            description: 'Your order is on its way.'
+            description: 'Your order is on its way.',
+            icon: Truck
         },
         {
             key: 'delivered',
             label: 'Delivered',
-            description: 'Your order has been delivered.'
+            description: 'Your order has been delivered.',
+            icon: Home
         }
     ];
 
@@ -101,11 +109,14 @@ function OrderDetails() {
         (step) => step.key === order.orderStatus
     );
 
+    // Handle special statuses not in the timeline (pending, cancelled)
+    const isSpecialStatus = currentStepIndex === -1;
+
     return (
         <div className="page container order-details-page">
 
             <Link to="/orders" className="back-link">
-                <ArrowLeft size={18} />
+                <ArrowLeft size={16} strokeWidth={2} />
                 Back to Orders
             </Link>
 
@@ -116,7 +127,7 @@ function OrderDetails() {
                     </h1>
 
                     <div className="order-date">
-                        <CalendarDays size={16} />
+                        <CalendarDays size={14} strokeWidth={2} />
                         {formatDate(order.createdAt)}
                     </div>
                 </div>
@@ -126,47 +137,52 @@ function OrderDetails() {
                 </span>
             </div>
 
-            {/* ORDER TRACKING */}
-            <div className="order-tracking-section">
-                <h2>Track Your Order</h2>
+            {/* ORDER TRACKING — only shown for standard statuses */}
+            {!isSpecialStatus && (
+                <div className="order-tracking-section">
+                    <h2>Track Your Order</h2>
 
-                <div className="tracking-timeline">
-                    {orderSteps.map((step, index) => {
-                        const isCompleted = index <= currentStepIndex;
-                        const isCurrent = index === currentStepIndex;
+                    <div className="tracking-timeline">
+                        {orderSteps.map((step, index) => {
+                            const isCompleted = index <= currentStepIndex;
+                            const isCurrent = index === currentStepIndex;
+                            const StepIcon = step.icon;
 
-                        return (
-                            <div
-                                className={`tracking-step ${isCompleted ? 'completed' : ''
-                                    } ${isCurrent ? 'current' : ''}`}
-                                key={step.key}
-                            >
-                                <div className="tracking-indicator">
-                                    <div className="tracking-dot">
-                                        {isCompleted ? '✓' : index + 1}
+                            return (
+                                <div
+                                    className={`tracking-step ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`}
+                                    key={step.key}
+                                >
+                                    <div className="tracking-indicator">
+                                        <div className="tracking-dot">
+                                            {isCompleted
+                                                ? <StepIcon size={14} strokeWidth={2.5} />
+                                                : <span style={{ fontSize: '0.72rem' }}>{index + 1}</span>
+                                            }
+                                        </div>
+
+                                        {index !== orderSteps.length - 1 && (
+                                            <div className="tracking-line" />
+                                        )}
                                     </div>
 
-                                    {index !== orderSteps.length - 1 && (
-                                        <div className="tracking-line" />
-                                    )}
+                                    <div className="tracking-content">
+                                        <h3>{step.label}</h3>
+                                        <p>{step.description}</p>
+                                    </div>
                                 </div>
-
-                                <div className="tracking-content">
-                                    <h3>{step.label}</h3>
-                                    <p>{step.description}</p>
-                                </div>
-                            </div>
-                        );
-                    })}
+                            );
+                        })}
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div className="order-details-grid">
 
                 {/* ORDER ITEMS */}
                 <div className="order-details-section items-section">
                     <h2>
-                        <Package size={21} />
+                        <Package size={17} strokeWidth={2} />
                         Order Items
                     </h2>
 
@@ -207,7 +223,7 @@ function OrderDetails() {
                     {/* DELIVERY ADDRESS */}
                     <div className="order-details-section">
                         <h2>
-                            <MapPin size={21} />
+                            <MapPin size={17} strokeWidth={2} />
                             Delivery Address
                         </h2>
 
@@ -219,7 +235,7 @@ function OrderDetails() {
                             <p>
                                 {order.shippingAddress.address}
                                 <br />
-                                {order.shippingAddress.city} -{' '}
+                                {order.shippingAddress.city} –{' '}
                                 {order.shippingAddress.pincode}
                             </p>
                         </div>
@@ -228,7 +244,7 @@ function OrderDetails() {
                     {/* PAYMENT */}
                     <div className="order-details-section">
                         <h2>
-                            <CreditCard size={21} />
+                            <CreditCard size={17} strokeWidth={2} />
                             Payment Details
                         </h2>
 

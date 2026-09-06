@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Search } from 'lucide-react';
 
 import ProductCard from '../components/ProductCard';
 import { getProducts } from '../api/productApi';
@@ -85,39 +86,45 @@ function Products() {
 
       {/* PAGE HEADER */}
       <div className="page-header">
-        <div>
-          <h1>Fresh Groceries</h1>
-          <p>Fresh products delivered to your doorstep.</p>
+        <div className="page-header-top">
+          <div>
+            <h1>Fresh Groceries</h1>
+            <p>Fresh products delivered to your doorstep.</p>
+          </div>
+
+          <div className="search-wrapper">
+            <Search size={16} strokeWidth={2} />
+            <input
+              type="text"
+              placeholder="Search products…"
+              className="search-input"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              aria-label="Search products"
+            />
+          </div>
         </div>
 
-        <input
-          type="text"
-          placeholder="Search products..."
-          className="search-input"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-
-      {/* CATEGORY FILTER */}
-      <div className="category-list">
-        {categories.map((category) => (
-          <button
-            key={category}
-            className={`category-btn ${
-              selectedCategory === category ? 'active' : ''
-            }`}
-            onClick={() => handleCategoryChange(category)}
-          >
-            {category}
-          </button>
-        ))}
+        {/* CATEGORY FILTER */}
+        <div className="category-list">
+          {categories.map((category) => (
+            <button
+              key={category}
+              className={`category-btn ${
+                selectedCategory === category ? 'active' : ''
+              }`}
+              onClick={() => handleCategoryChange(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* LOADING STATE */}
       {loading && (
         <div className="loading-state">
-          Loading fresh products...
+          Loading fresh products…
         </div>
       )}
 
@@ -132,7 +139,7 @@ function Products() {
       {!loading && !error && products.length === 0 && (
         <div className="empty-state">
           <h3>No products found</h3>
-          <p>Try searching for something else.</p>
+          <p>Try a different search term or category.</p>
         </div>
       )}
 

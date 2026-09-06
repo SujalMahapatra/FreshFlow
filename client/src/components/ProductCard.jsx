@@ -44,27 +44,22 @@ function ProductCard({ product }) {
       </div>
 
       <div className="product-info">
-        <span className="product-category">
-          {product.category}
-        </span>
+        <span className="product-category">{product.category}</span>
 
         <h3>{product.name}</h3>
 
         <p className="product-unit">{product.unit}</p>
 
         <div className="product-footer">
-          <div>
-            <span className="product-price">
-              ₹{product.price}
-            </span>
-          </div>
+          <span className="product-price">₹{product.price}</span>
 
           <button
             className="add-cart-btn"
             onClick={handleAddToCart}
             disabled={product.stock === 0}
+            aria-label={`Add ${product.name} to cart`}
           >
-            <ShoppingCart size={18} />
+            <ShoppingCart size={15} strokeWidth={2} />
             Add
           </button>
         </div>

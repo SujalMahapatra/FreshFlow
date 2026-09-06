@@ -90,7 +90,7 @@ function Payment() {
           },
 
           theme: {
-            color: '#2e7d32'
+            color: '#1a5c38'
           },
 
           modal: {
@@ -131,21 +131,21 @@ function Payment() {
 
         {loading && (
           <>
-            <Loader className="payment-loader" size={45} />
-            <h2>Preparing secure payment...</h2>
+            <div className="payment-loader-wrap">
+              <Loader className="payment-loader" size={28} strokeWidth={2} />
+            </div>
+            <h2>Preparing secure payment…</h2>
             <p>Please wait while we connect to Razorpay.</p>
           </>
         )}
 
         {!loading && error && (
           <>
-            <CreditCard size={55} className="payment-error-icon" />
+            <CreditCard size={48} className="payment-error-icon" strokeWidth={1.5} />
 
             <h2>Payment could not be started</h2>
 
-            <p className="payment-error">
-              {error}
-            </p>
+            <p className="payment-error">{error}</p>
 
             <button
               className="retry-payment-btn"
@@ -158,14 +158,21 @@ function Payment() {
 
         {paymentStarted && (
           <>
-            <ShieldCheck size={55} className="payment-success-icon" />
+            <div className="payment-loader-wrap">
+              <ShieldCheck size={28} className="payment-success-icon" strokeWidth={2} />
+            </div>
 
-            <h2>Verifying your payment...</h2>
+            <h2>Verifying your payment…</h2>
 
-            <p>
-              Please don't close or refresh this page.
-            </p>
+            <p>Please don't close or refresh this page.</p>
           </>
+        )}
+
+        {!loading && !error && !paymentStarted && (
+          <p className="payment-secure-badge">
+            <ShieldCheck size={14} strokeWidth={2} />
+            Secured by Razorpay
+          </p>
         )}
 
       </div>

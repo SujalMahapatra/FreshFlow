@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, ChevronRight, ShoppingBag } from 'lucide-react';
+import { Package, ChevronRight, ShoppingBag, ArrowRight } from 'lucide-react';
 import API from '../api/axios';
 
 function Orders() {
@@ -41,27 +41,32 @@ function Orders() {
   if (loading) {
     return (
       <div className="page container">
-        <div className="page-loading">Loading your orders...</div>
+        <div className="page-loading">Loading your orders…</div>
       </div>
     );
   }
 
   return (
     <div className="page container orders-page">
+
       <div className="orders-header">
         <div>
           <h1>My Orders</h1>
           <p>Track and manage your grocery orders</p>
         </div>
 
-        <Package size={32} />
+        <div className="orders-header-icon">
+          <Package size={22} strokeWidth={1.75} />
+        </div>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <div className="error-message" role="alert">{error}</div>}
 
       {!error && orders.length === 0 && (
         <div className="empty-orders">
-          <ShoppingBag size={55} />
+          <div className="empty-orders-icon">
+            <ShoppingBag size={32} strokeWidth={1.5} />
+          </div>
 
           <h2>No orders yet</h2>
 
@@ -70,8 +75,9 @@ function Orders() {
             Start shopping for fresh groceries!
           </p>
 
-          <Link to="/products" className="primary-btn">
+          <Link to="/shop" className="primary-btn">
             Start Shopping
+            <ArrowRight size={15} strokeWidth={2.5} />
           </Link>
         </div>
       )}
@@ -85,14 +91,14 @@ function Orders() {
           >
             <div className="order-card-main">
               <div className="order-icon">
-                <Package size={24} />
+                <Package size={18} strokeWidth={1.75} />
               </div>
 
               <div className="order-info">
                 <h3>Order #{order._id.slice(-6).toUpperCase()}</h3>
 
                 <span>
-                  {formatDate(order.createdAt)} • {order.items.length} item
+                  {formatDate(order.createdAt)} · {order.items.length} item
                   {order.items.length !== 1 ? 's' : ''}
                 </span>
               </div>
@@ -107,11 +113,12 @@ function Orders() {
                 {order.orderStatus.replace(/_/g, ' ')}
               </span>
 
-              <ChevronRight size={20} />
+              <ChevronRight size={18} strokeWidth={1.75} />
             </div>
           </Link>
         ))}
       </div>
+
     </div>
   );
 }

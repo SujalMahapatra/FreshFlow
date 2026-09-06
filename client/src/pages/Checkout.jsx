@@ -62,9 +62,9 @@ function Checkout() {
 
         <button
           className="continue-shopping-btn"
-          onClick={() => navigate('/products')}
+          onClick={() => navigate('/shop')}
         >
-          Go to Products
+          Go to Shop
         </button>
       </div>
     );
@@ -77,7 +77,7 @@ function Checkout() {
         className="back-button"
         onClick={() => navigate('/cart')}
       >
-        <ArrowLeft size={18} />
+        <ArrowLeft size={16} strokeWidth={2} />
         Back to Cart
       </button>
 
@@ -87,51 +87,55 @@ function Checkout() {
         <div className="checkout-form-container">
 
           <div className="checkout-title">
-            <MapPin size={28} />
+            <div className="checkout-title-icon">
+              <MapPin size={20} strokeWidth={1.75} />
+            </div>
             <div>
               <h1>Delivery Details</h1>
               <p>Where should we deliver your groceries?</p>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} noValidate>
 
             {error && (
-              <div className="form-error">
+              <div className="form-error" role="alert">
                 {error}
               </div>
             )}
 
             <div className="form-group">
-              <label>Full Name</label>
-
+              <label htmlFor="checkout-name">Full Name</label>
               <input
+                id="checkout-name"
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Enter recipient name"
                 required
+                autoComplete="name"
               />
             </div>
 
             <div className="form-group">
-              <label>Phone Number</label>
-
+              <label htmlFor="checkout-phone">Phone Number</label>
               <input
+                id="checkout-phone"
                 type="tel"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="Enter phone number"
                 required
+                autoComplete="tel"
               />
             </div>
 
             <div className="form-group">
-              <label>Delivery Address</label>
-
+              <label htmlFor="checkout-address">Delivery Address</label>
               <textarea
+                id="checkout-address"
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
@@ -144,28 +148,30 @@ function Checkout() {
             <div className="form-row">
 
               <div className="form-group">
-                <label>City</label>
-
+                <label htmlFor="checkout-city">City</label>
                 <input
+                  id="checkout-city"
                   type="text"
                   name="city"
                   value={formData.city}
                   onChange={handleChange}
                   placeholder="City"
                   required
+                  autoComplete="address-level2"
                 />
               </div>
 
               <div className="form-group">
-                <label>Pincode</label>
-
+                <label htmlFor="checkout-pincode">Pincode</label>
                 <input
+                  id="checkout-pincode"
                   type="text"
                   name="pincode"
                   value={formData.pincode}
                   onChange={handleChange}
                   placeholder="Pincode"
                   required
+                  autoComplete="postal-code"
                 />
               </div>
 
@@ -177,7 +183,7 @@ function Checkout() {
               disabled={loading}
             >
               {loading
-                ? 'Creating Order...'
+                ? 'Creating Order…'
                 : `Continue to Payment • ₹${cartTotal}`
               }
             </button>
@@ -192,7 +198,6 @@ function Checkout() {
           <h2>Order Summary</h2>
 
           <div className="checkout-products">
-
             {cart.map((item) => (
               <div
                 className="checkout-product"
@@ -215,10 +220,14 @@ function Checkout() {
                 </strong>
               </div>
             ))}
-
           </div>
 
-          <div className="summary-divider"></div>
+          <div className="summary-divider" />
+
+          <div className="summary-row">
+            <span>Delivery</span>
+            <span style={{ color: 'var(--color-brand)', fontWeight: 600 }}>Free</span>
+          </div>
 
           <div className="summary-total">
             <span>Total Amount</span>

@@ -125,7 +125,7 @@ const products = [
     description: 'Thick and creamy plain yogurt, great for digestion.',
     price: 50,
     category: 'Dairy',
-    image: 'https://images.unsplash.com/photo-1571212515416-fca988083b70',
+    image: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0',
     unit: '400 g',
     stock: 110
   },
