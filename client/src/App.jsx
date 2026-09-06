@@ -11,6 +11,8 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Orders from './pages/Orders';
 import OrderDetails from './pages/OrderDetails';
+import Payment from './pages/Payment';
+import OrderSuccess from './pages/OrderSuccess';
 
 function App() {
   return (
@@ -59,6 +61,20 @@ function App() {
               <OrderDetails />
             </ProtectedRoute>
           }
+        />
+
+        <Route
+          path="/payment/:orderId"
+          element={
+            <ProtectedRoute>
+              <Payment />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/order-success/:orderId"
+          element={<OrderSuccess />}
         />
       </Routes>
     </BrowserRouter>
