@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+
 import ProductCard from '../components/ProductCard';
 import { getProducts } from '../api/productApi';
 
@@ -13,12 +15,24 @@ const categories = [
 ];
 
 function Products() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Read category from URL, defaulting to All
+  const categoryFromURL = searchParams.get('category') || 'All';
+
+  const [selectedCategory, setSelectedCategory] = useState(categoryFromURL);
   const [products, setProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('All');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Keep selected category synchronized with URL
+  useEffect(() => {
+    const category = searchParams.get('category') || 'All';
+    setSelectedCategory(category);
+  }, [searchParams]);
+
+  // Fetch products whenever category or search changes
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -27,10 +41,12 @@ function Products() {
 
         const params = {};
 
+        // Only send category when a specific category is selected
         if (selectedCategory !== 'All') {
           params.category = selectedCategory;
         }
 
+        // Send search query if present
         if (search.trim()) {
           params.search = search.trim();
         }
@@ -47,6 +63,7 @@ function Products() {
       }
     };
 
+    // Small debounce for search input
     const timeoutId = setTimeout(() => {
       fetchProducts();
     }, 300);
@@ -54,8 +71,19 @@ function Products() {
     return () => clearTimeout(timeoutId);
   }, [selectedCategory, search]);
 
+  // Handle category selection and synchronize it with URL
+  const handleCategoryChange = (category) => {
+    if (category === 'All') {
+      setSearchParams({});
+    } else {
+      setSearchParams({ category });
+    }
+  };
+
   return (
     <div className="page container products-page">
+
+      {/* PAGE HEADER */}
       <div className="page-header">
         <div>
           <h1>Fresh Groceries</h1>
@@ -71,6 +99,7 @@ function Products() {
         />
       </div>
 
+      {/* CATEGORY FILTER */}
       <div className="category-list">
         {categories.map((category) => (
           <button
@@ -78,25 +107,28 @@ function Products() {
             className={`category-btn ${
               selectedCategory === category ? 'active' : ''
             }`}
-            onClick={() => setSelectedCategory(category)}
+            onClick={() => handleCategoryChange(category)}
           >
             {category}
           </button>
         ))}
       </div>
 
+      {/* LOADING STATE */}
       {loading && (
         <div className="loading-state">
           Loading fresh products...
         </div>
       )}
 
+      {/* ERROR STATE */}
       {error && (
         <div className="error-message">
           {error}
         </div>
       )}
 
+      {/* EMPTY STATE */}
       {!loading && !error && products.length === 0 && (
         <div className="empty-state">
           <h3>No products found</h3>
@@ -104,6 +136,7 @@ function Products() {
         </div>
       )}
 
+      {/* PRODUCTS GRID */}
       {!loading && !error && products.length > 0 && (
         <div className="products-grid">
           {products.map((product) => (
@@ -114,6 +147,7 @@ function Products() {
           ))}
         </div>
       )}
+
     </div>
   );
 }

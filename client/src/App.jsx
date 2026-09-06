@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route,Navigate } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -22,7 +22,7 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
+        <Route path="/shop" element={<Products />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
@@ -76,6 +76,8 @@ function App() {
           path="/order-success/:orderId"
           element={<OrderSuccess />}
         />
+
+        <Route path="/products" element={<Navigate to="/shop" replace />} />
       </Routes>
     </BrowserRouter>
   );

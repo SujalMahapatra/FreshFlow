@@ -26,14 +26,14 @@ function Navbar() {
             Home
           </NavLink>
 
-          <NavLink to="/products">
+          <NavLink to="/shop">
             Shop
           </NavLink>
 
           {user && (
             <NavLink to="/orders">
               <Package size={19} />
-              Orders
+              My Orders
             </NavLink>
           )}
         </div>
